@@ -133,7 +133,8 @@ module FastJsonapi
             included_objects.each do |inc_obj|
               if relationship_item.polymorphic.is_a?(Hash)
                 record_type = inc_obj.class.name.demodulize.underscore
-                serializer = self.compute_serializer_name(inc_obj.class.name.demodulize.to_sym).to_s.constantize
+                serializer_name = inc_obj.class.name.demodulize == inc_obj.class.name ? inc_obj.class.name.demodulize : (inc_obj.class.name + "Serializer").try(:constantize)
+                serializer = self.compute_serializer_name(serializer_name).to_s.constantize
               end
 
               if remaining_items(items)
